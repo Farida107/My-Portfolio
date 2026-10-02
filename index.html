@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Farida | Data Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Bricolage+Grotesque:wght@600;700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E8E1F8; --glow:#F5F1FE; --surface:#FBF9FF; --ink:#231B3D; --muted:#5E5680;
+  --line:#CBC0EA; --accent:#6A4DE0; --on-accent:#fff; --flow:#2FA58E; --chip:#DDD3F5;
+  --card-bg:#231B3D; --card-ink:#F5F1FE; --btn-bg:#231B3D; --btn-ink:#fff;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#1B1530; --glow:#2A2050; --surface:#251D40; --ink:#EEE9FB; --muted:#B3A9D6;
+    --line:#3A2F5F; --accent:#A892FF; --on-accent:#1B1530; --flow:#5FD6BD; --chip:#33284F;
+    --card-bg:#0E0A1E; --card-ink:#EEE9FB; --btn-bg:#A892FF; --btn-ink:#1B1530;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1B1530; --glow:#2A2050; --surface:#251D40; --ink:#EEE9FB; --muted:#B3A9D6;
+  --line:#3A2F5F; --accent:#A892FF; --on-accent:#1B1530; --flow:#5FD6BD; --chip:#33284F;
+  --card-bg:#0E0A1E; --card-ink:#EEE9FB; --btn-bg:#A892FF; --btn-ink:#1B1530;
+}
+html{scroll-padding-top:90px;scroll-behavior:smooth;height:100%}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;min-height:100%;color:var(--ink);font-family:Figtree,system-ui,sans-serif;font-size:17px;line-height:1.65;
+  background:radial-gradient(800px 500px at 85% 0,var(--glow),transparent 70%),radial-gradient(600px 400px at 0 60%,var(--glow),transparent 70%),var(--bg)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+h1,h2,h3{font-family:'Bricolage Grotesque',Georgia,sans-serif;line-height:1.12;margin:0}
+a{color:var(--accent);text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+/* top bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--surface) 82%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;font-weight:600}
+.logo{width:36px;height:36px;border-radius:10px;background:var(--card-bg);color:var(--card-ink);display:grid;place-items:center;font-family:Syne,sans-serif;font-weight:800;font-size:18px}
+.links{display:flex;align-items:center;gap:26px}
+.links a{color:var(--ink);text-decoration:none;font-weight:500;font-size:15px}
+.links a:hover{color:var(--accent)}
+.links .pill{background:var(--btn-bg);color:var(--btn-ink);padding:9px 18px;border-radius:12px;font-weight:600}
+.links .pill:hover{color:var(--btn-ink);opacity:.88}
+@media (max-width:760px){.links a:not(.pill){display:none}}
+
+/* buttons */
+.btn{display:inline-block;padding:13px 26px;border-radius:999px;font-weight:600;font-size:16px;text-decoration:none;border:1.5px solid var(--btn-bg);transition:transform .15s}
+.btn.main{background:var(--btn-bg);color:var(--btn-ink)}
+.btn.alt{color:var(--ink);border-color:var(--ink)}
+.btn:hover{transform:translateY(-2px)}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+
+/* hero */
+.hero{display:grid;gap:44px;padding:44px 0 24px;align-items:center}
+@media (min-width:860px){.hero{grid-template-columns:1.1fr .9fr;padding-top:64px}}
+.avail{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 18px;
+  background:rgba(106,77,224,0.08);
+  border: 1px solid rgba(106,77,224,0.2);
+  border-radius:50px;
+  color:var(--accent);
+  font-size:14px;
+  font-weight:600;
+  letter-spacing:0.2px;
+  box-shadow:0 4px 12px rgba(106,77,224,0.06);
+  transition:all .3s ease;
+}
+.avail::before{
+  content:"";
+  width:8px;
+  height:8px;
+  background:#2FA58E;
+  border-radius:50%;
+  box-shadow:0 0 0 4px rgba(47,165,142,0.12);
+}
+.avail:hover{
+  background:rgba(106,77,224,0.13);
+  transform:translateY(-2px);
+}
+.avail i{width:8px;height:8px;border-radius:50%;background:var(--flow);display:block}
+.hero h1{
+  font-family: Syne, sans-serif;
+  font-size: clamp(58px, 10vw, 100px);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 1.05;
+
+  background: linear-gradient(
+    120deg,
+    #231B3D 20%,
+    #7655D9 75%,
+    #A892FF 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;}
+.role{margin:22px 0 0;font-size:14px;font-weight:600;letter-spacing:.24em;text-transform:uppercase}
+.lead{font-size:19px;color:var(--muted);max-width:30em;margin:20px 0 0}
+
+.visual{position:relative;padding:0 11% 9% 0;max-width:460px;width:100%;justify-self:center}
+.arch{
+ position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: 180px 180px 28px 28px;
+  overflow: hidden;
+
+  background: linear-gradient(
+    145deg,
+    #DDD3F5,
+    #7655D9
+  );
+
+  border: 6px solid var(--surface);
+
+  box-shadow:
+    0 25px 60px -25px rgba(70, 40, 160, 0.45),
+    0 0 0 1px var(--line);
+}
+.arch span{position:absolute;inset:0;display:grid;place-items:center;font-family:Syne,sans-serif;font-weight:800;font-size:150px;color:var(--surface);opacity:.55}
+.arch img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tag{position:absolute;right:0;bottom:0;width:46%;aspect-ratio:1/1.12;background:var(--card-bg);color:var(--card-ink);border-radius:22px;padding:14px;display:flex;gap:10px;box-shadow:0 24px 50px -22px rgba(20,10,60,.7)}
+.tag b{writing-mode:vertical-rl;transform:rotate(180deg);font-family:Syne,sans-serif;font-weight:800;font-size:clamp(22px,4.6vw,34px);letter-spacing:.06em}
+.tag div{flex:1;border-radius:14px;background:linear-gradient(170deg,var(--accent),var(--chip) 160%);display:grid;place-items:center}
+.tag svg{width:60%;height:auto}
+
+/* sections */
+section{padding:100px 0 0}
+.eyebrow{
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 14px;
+}
+h2{ font-size: clamp(34px, 5vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  margin-bottom: 26px;}
+.about{display:grid;gap:28px}
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+@media (min-width: 860px) {
+    .about {
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        gap: 60px;
+    }
+}
+.about p{
+    margin: 0;
+    color: var(--muted);
+    font-size: 17px;
+    line-height: 1.9;
+    max-width: 36em;}
+.about p:first-child{color:var(--ink)}
+
+.panel{
+   background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    padding: 30px 20px;
+    box-shadow: 0 24px 50px -34px rgba(60, 40, 140, .5);
+    align-self: center;
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+.panel:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 28px 55px -30px rgba(60, 40, 140, .6);
+}
+.flow{width:100%;height:auto;display:block}
+.flow .link{stroke:var(--line);stroke-width:3;stroke-linecap:round}
+.flow .box{fill:var(--chip);stroke:var(--accent);stroke-width:2}
+.flow .t{fill:var(--ink);font-family:Figtree,system-ui,sans-serif;font-size:16px;font-weight:600;text-anchor:middle}
+.flow .s{fill:var(--muted);font-family:Figtree,system-ui,sans-serif;font-size:12px;text-anchor:middle}
+.flow .dot{fill:var(--flow);animation:move 4s linear infinite}
+.flow .dot:nth-of-type(2){animation-delay:-1.33s}
+.flow .dot:nth-of-type(3){animation-delay:-2.66s}
+@keyframes move{from{transform:translateX(0);opacity:0}10%{opacity:1}90%{opacity:1}to{transform:translateX(280px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.flow .dot{animation:none;opacity:0}.btn{transition:none}}
+
+.groups{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.group{
+  position: relative;
+  background: var(--surface);
+  border: 1px solid rgba(118, 85, 217, 0.12);
+  border-radius: 20px;
+  padding: 26px;
+
+  box-shadow:
+    0 8px 30px rgba(40, 25, 80, 0.04);
+
+  transition: transform 0.3s ease,
+              box-shadow 0.3s ease;
+}
+.group:hover {
+  transform: translateY(-5px);
+
+  box-shadow:
+    0 18px 40px rgba(40, 25, 80, 0.10);
+}
+.group h3{font-size:20px;font-weight:600;margin-bottom:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{background:var(--chip);border-radius:999px;padding:5px 14px;font-weight:500;font-size:15px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.slot{
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 28px;
+  background: var(--surface);
+  min-height: 210px;
+
+  box-shadow:
+    0 10px 30px rgba(40, 25, 80, 0.05);
+
+  transition: all 0.3s ease;
+}
+.slot:hover {
+  transform: translateY(-6px);
+
+  box-shadow:
+    0 20px 45px rgba(40, 25, 80, 0.12);
+}
+.plus{width:42px;height:42px;border-radius:50%;background:var(--btn-bg);color:var(--btn-ink);display:grid;place-items:center;font-size:26px;line-height:1;margin-bottom:18px}
+.slot h3{ font-size: 23px;
+  font-weight: 700;
+  margin-bottom: 12px;}
+.slot p{ margin: 0;
+  color: var(--muted);
+  font-size: 15px;}
+
+.contact{background:var(--card-bg);color:var(--card-ink);border-radius:32px;padding:clamp(28px,6vw,56px)}
+.contact .eyebrow{color:var(--card-ink);opacity:.7}
+.contact h2{margin-bottom:12px}
+.contact p{margin:0 0 6px;opacity:.85;max-width:30em}
+.contact .btn.main{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.contact .btn.alt{color:var(--card-ink);border-color:var(--card-ink)}
+footer{padding:48px 0 44px;color:var(--muted);font-size:15px}
+
+.education-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+
+  padding: 30px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+
+  box-shadow: 0 10px 35px rgba(40, 25, 80, 0.05);
+
+  transition: transform 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+.education-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 18px 40px rgba(40, 25, 80, 0.1);
+}
+
+.education-icon {
+  width: 58px;
+  height: 58px;
+  min-width: 58px;
+
+  display: grid;
+  place-items: center;
+
+  background: var(--chip);
+  border-radius: 18px;
+  font-size: 27px;
+}
+
+.education-content h3 {
+  font-size: 22px;
+  margin: 8px 0;
+}
+
+.education-label {
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.degree {
+  font-weight: 600;
+  margin: 5px 0;
+}
+
+.education-description {
+  color: var(--muted);
+  margin: 10px 0;
+}
+
+.education-status {
+  display: inline-block;
+  padding: 5px 12px;
+  background: var(--chip);
+  color: var(--accent);
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+@media (max-width: 500px) {
+  .education-card {
+    padding: 20px;
+    gap: 14px;
+  }
+
+  .education-icon {
+    width: 45px;
+    height: 45px;
+    min-width: 45px;
+    font-size: 22px;
+  }
+}
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="logo">F</span>Farida</a>
+    <nav class="links" aria-label="Sections">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#education">Education</a>
+      <a href="#training">Training</a>
+      <a href="#projects">Projects</a>
+      <a class="pill" href="#contact">Get in touch</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+  <div class="hero">
+    <div>
+      <div class="avail"><i></i>Open to internships and junior roles</div>
+      <h1>Farida Sherif</h1>
+      <h2 class="role">Data Engineer</h2>
+      <p class="lead">Aspiring Data Engineer passionate about building data solutions,
+  solving problems, and transforming raw data into meaningful insights.</p>
+      <div class="actions">
+        <a class="btn main" href="#projects">Explore Projects &rarr;</a>
+        <a class="btn alt" href="#contact">Get in touch</a>
+      </div>
+    </div>
+
+    <div class="visual">
+      <div class="arch">
+        <span aria-hidden="true">F</span>
+        <!-- Put your photo in the same folder and name it photo.jpg -->
+        <img src="my photo.jpeg" alt="Portrait of Farida" onerror="this.remove()">
+      </div>
+      <div class="tag" aria-hidden="true">
+        <b>FARIDA</b>
+        <div>
+          <svg viewBox="0 0 60 90" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round">
+            <circle cx="30" cy="12" r="8"/><circle cx="30" cy="45" r="8"/><circle cx="30" cy="78" r="8"/>
+            <path d="M30 20v17M30 53v17"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="about">
+    <div class="about">
+      <div>
+        <h2>About Me</h2>
+        <p>Hi, I'm Farida Sherif, a Computer Science student at
+  Alexandria University, passionate about Data Engineering.
+  I enjoy turning raw data into structured, meaningful
+  information and building efficient data solutions.
+  Currently, I'm developing my skills in Python, SQL,
+  and ETL through hands-on learning and practical training.</p>
+      </div>
+      <div class="panel">
+        <svg class="flow" viewBox="0 0 600 130" role="img" aria-label="A data pipeline from source to transform to warehouse">
+          <line class="link" x1="160" y1="62" x2="230" y2="62"/>
+          <line class="link" x1="370" y1="62" x2="440" y2="62"/>
+          <circle class="dot" cx="160" cy="62" r="5"/>
+          <circle class="dot" cx="160" cy="62" r="5"/>
+          <circle class="dot" cx="160" cy="62" r="5"/>
+          <rect class="box" x="20" y="28" width="140" height="68" rx="14"/>
+          <rect class="box" x="230" y="28" width="140" height="68" rx="14"/>
+          <rect class="box" x="440" y="28" width="140" height="68" rx="14"/>
+          <text class="t" x="90" y="60">Source</text><text class="s" x="90" y="80">APIs, CSV files</text>
+          <text class="t" x="300" y="60">Transform</text><text class="s" x="300" y="80">Clean and model</text>
+          <text class="t" x="510" y="60">Warehouse</text><text class="s" x="510" y="80">Ready to query</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <h2>Skills</h2>
+    <div class="groups">
+      <div class="group"><h3>Languages</h3><div class="chips"><span>Python</span><span>C++</span></div></div>
+      <div class="group"><h3>Database</h3><div class="chips"><span>SQL</span><span>SQL Server</span></div></div>
+      <div class="group"><h3>Data Engineering</h3><div class="chips"><span>ETL</span><span>Data Cleaning</span><span>Data Transformation</span><span>Data Pipelines</span></div></div>
+      <div class="group"><h3>Tools & Technologies</h3><div class="chips"><span>Git & GitHub</span><span>Docker</span><span>Pandas</span><span>VS Code</span></div></div>
+    </div>
+  </section>
+   
+  <section id="education">
+  <h2>Education</h2>
+
+  <div class="education-card">
+    <div class="education-icon">🎓</div>
+
+    <div class="education-content">
+      <span class="education-label">University Education</span>
+
+      <h3>Alexandria University</h3>
+
+      <p class="degree">
+        Bachelor's Degree in Computer Science
+      </p>
+
+      <p class="education-description">
+        Building a strong foundation in programming,
+        databases, algorithms, and software development.
+      </p>
+
+      <span class="education-status">Currently Studying</span>
+    </div>
+  </div>
+</section>
+
+   <section id="training">
+  <h2>Training & Certifications</h2>
+
+  <div class="slot">
+    <h3>Digital Egypt Pioneers Initiative (DEPI)</h3>
+    <p><strong>Data Engineering Trainee</strong></p>
+    <p>
+      Developing practical skills in Python, SQL, data processing,
+      and ETL workflows through technical training and assignments.
+    </p>
+  </div>
+</section>
+
+  <section id="projects">
+    <p class="eyebrow">Projects</p>
+    <h2>Selected work</h2>
+    <div class="grid">
+      <div class="slot">
+        <div class="plus" aria-hidden="true">+</div>
+        <h3>First project</h3>
+        <p>Add a title, a two-sentence summary, the tech stack, and a GitHub link.</p>
+      </div>
+      <div class="slot">
+        <div class="plus" aria-hidden="true">+</div>
+        <h3>Second project</h3>
+        <p>Add an architecture diagram and what the pipeline produces.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="contact">
+      <p class="eyebrow">Contact</p>
+      <h2>Let's work together</h2>
+      <p>Open to internships and junior data engineering roles.</p>
+      <div class="actions">
+        <a class="btn main" href="mailto:fary.sherif35@gmail.com">Email me</a>
+        <a class="btn alt" href="https://github.com/Farida107">GitHub</a>
+        <a class="btn alt" href="https://www.linkedin.com/in/farida-sherif-73a953375/">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>© 2026 Farida Sherif. All Rights Reserved.</footer>
+</main>
+</body>
+</html>
